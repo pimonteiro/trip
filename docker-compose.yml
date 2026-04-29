@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/itskovacs/trip:1
+    image: ghcr.io/pimonteiro/trip:feat-improvements
     ports:
       - 127.0.0.1:8080:8000 #127.0.0.1: locally exposed, on port 8080 by default
     volumes:
