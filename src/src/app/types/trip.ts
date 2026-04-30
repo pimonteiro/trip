@@ -65,6 +65,10 @@ export interface TripItem {
   gpx?: string;
   paid_by?: string;
   attachments?: TripAttachment[];
+  type: string;
+  transit_mode?: string;
+  arrival_time?: string;
+  arrival_location?: string;
 }
 
 export interface TripStatus {
@@ -92,6 +96,10 @@ export interface FlattenedTripItem {
   gpx?: string;
   paid_by?: string;
   attachments?: TripAttachment[];
+  type: string;
+  transit_mode?: string;
+  arrival_time?: string;
+  arrival_location?: string;
 }
 
 export interface TripMember {

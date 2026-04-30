@@ -381,6 +381,10 @@ def create_tripitem(
         day_id=day_id,
         price=item.price,
         status=item.status,
+        type=item.type,
+        transit_mode=item.transit_mode,
+        arrival_time=item.arrival_time,
+        arrival_location=item.arrival_location,
     )
 
     filename = None

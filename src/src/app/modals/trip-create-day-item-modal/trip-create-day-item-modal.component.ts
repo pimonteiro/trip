@@ -19,6 +19,7 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { Popover, PopoverModule } from 'primeng/popover';
 import { ApiService } from '../../services/api.service';
 import { take } from 'rxjs';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 @Component({
   selector: 'app-trip-create-day-item-modal',
@@ -30,15 +31,12 @@ import { take } from 'rxjs';
     SelectModule,
     ReactiveFormsModule,
     TextareaModule,
-    FloatLabelModule,
-    InputTextModule,
-    ButtonModule,
-    ReactiveFormsModule,
     InputMaskModule,
     MultiSelectModule,
     InputGroupModule,
     InputGroupAddonModule,
     PopoverModule,
+    SelectButtonModule,
   ],
   standalone: true,
   templateUrl: './trip-create-day-item-modal.component.html',
@@ -60,6 +58,20 @@ export class TripCreateDayItemModalComponent {
   previous_image_id: number | null = null;
   previous_image: string | null = null;
   trip?: Trip;
+
+  transitModes = [
+    { label: 'Flight', value: 'flight', icon: 'pi pi-send' },
+    { label: 'Train', value: 'train', icon: 'pi pi-compass' },
+    { label: 'Bus', value: 'bus', icon: 'pi pi-car' },
+    { label: 'Car', value: 'car', icon: 'pi pi-car' },
+    { label: 'Walk', value: 'walk', icon: 'pi pi-directions' },
+    { label: 'Boat', value: 'boat', icon: 'pi pi-directions' },
+  ];
+
+  typeOptions = [
+    { label: 'Place', value: 'place', icon: 'pi pi-map-marker' },
+    { label: 'Transit', value: 'transit', icon: 'pi pi-directions' },
+  ];
 
   constructor(
     private ref: DynamicDialogRef,
@@ -102,6 +114,15 @@ export class TripCreateDayItemModalComponent {
       ],
       paid_by: null,
       attachments: [],
+      type: ['place', Validators.required],
+      transit_mode: null,
+      arrival_time: [
+        '',
+        {
+          validators: [Validators.pattern(/^([01]\d|2[0-3])(:[0-5]\d)?$/)],
+        },
+      ],
+      arrival_location: null,
     });
 
     const data = this.config.data;
@@ -110,12 +131,14 @@ export class TripCreateDayItemModalComponent {
       this.places = data.places ?? [];
       this.trip = data.trip ?? [];
 
-      if (data.item)
+      if (data.item) {
         this.itemForm.patchValue({
           ...data.item,
           place: data.item.place?.id ?? null,
           attachments: data.item.attachments.map((a: TripAttachment) => a.id),
+          type: data.item.type ?? 'place',
         });
+      }
 
       if (data.selectedDayId) this.itemForm.get('day_id')?.setValue([data.selectedDayId]);
       if (data.selectedPlaceId) {
@@ -175,6 +198,15 @@ export class TripCreateDayItemModalComponent {
     if (ret['attachments']) {
       ret['attachment_ids'] = ret['attachments'];
       delete ret['attachments'];
+    }
+    if (ret['type'] === 'transit') {
+      ret['place'] = null;
+      ret['lat'] = null;
+      ret['lng'] = null;
+    } else {
+      ret['transit_mode'] = null;
+      ret['arrival_time'] = null;
+      ret['arrival_location'] = null;
     }
     this.ref.close(ret);
   }

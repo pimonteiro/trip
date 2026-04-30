@@ -140,7 +140,7 @@ export class ApiService {
   }
 
   postTrip(trip: TripBase): Observable<TripBase> {
-    const { id, user, days, collaborators, ...data } = trip as any;
+    const { id, user, days, collaborators, image_id, daterange, ...data } = trip as any;
     if (data.budget === '') data.budget = null;
     return this.httpClient.post<TripBase>(`${this.apiBaseUrl}/trips`, data);
   }
@@ -150,7 +150,7 @@ export class ApiService {
   }
 
   putTrip(trip: Partial<Trip>, tripId: number): Observable<Trip> {
-    const { id, user, days, collaborators, attachments, places, shared, image_id, ...data } = trip as any;
+    const { id, user, days, collaborators, attachments, places, shared, image_id, daterange, ...data } = trip as any;
     if (data.budget === '') data.budget = null;
     return this.httpClient.put<Trip>(`${this.apiBaseUrl}/trips/${tripId}`, data);
   }
@@ -172,6 +172,7 @@ export class ApiService {
   postTripDayItem(item: TripItem, tripId: number, day_id: number): Observable<TripItem> {
     const { id, place, day_id: _, image_id, status, attachments, distance, ...data } = item as any;
     if (data.price === '') data.price = null;
+    if (data.arrival_time === '') data.arrival_time = null;
     const payload = { ...data, place: place?.id, status: typeof status === 'string' ? status : status?.label };
     return this.httpClient.post<TripItem>(`${this.apiBaseUrl}/trips/${tripId}/days/${day_id}/items`, payload);
   }
@@ -179,6 +180,7 @@ export class ApiService {
   putTripDayItem(item: Partial<TripItem>, tripId: number, day_id: number, item_id: number): Observable<TripItem> {
     const { id, place, day_id: _, image_id, status, attachments, distance, ...data } = item as any;
     if (data.price === '') data.price = null;
+    if (data.arrival_time === '') data.arrival_time = null;
     const payload = { ...data, place: place?.id, status: typeof status === 'string' ? status : status?.label };
     return this.httpClient.put<TripItem>(`${this.apiBaseUrl}/trips/${tripId}/days/${day_id}/items/${item_id}`, payload);
   }

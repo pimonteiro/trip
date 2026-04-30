@@ -262,6 +262,23 @@ export class TripComponent implements AfterViewInit, OnDestroy {
     return this.dailyWeather()?.find((w) => w.date === day.dt);
   }
 
+  getTransitIcon(mode?: string): string {
+    switch (mode) {
+      case 'flight':
+        return 'pi pi-send';
+      case 'train':
+        return 'pi pi-compass';
+      case 'bus':
+      case 'car':
+        return 'pi pi-car';
+      case 'walk':
+      case 'boat':
+        return 'pi pi-directions';
+      default:
+        return 'pi pi-directions';
+    }
+  }
+
   tripViewModel = computed(() => {
     const currentTrip = this.trip();
     if (!currentTrip?.days) return [];

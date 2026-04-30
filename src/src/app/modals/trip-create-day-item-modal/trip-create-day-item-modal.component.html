@@ -47,12 +47,65 @@
         }
       </div>
     </div>
+
+    <div class="flex justify-center">
+      <p-selectbutton [options]="typeOptions" formControlName="type" optionLabel="label" optionValue="value">
+        <ng-template let-item #item>
+          <div class="flex items-center gap-2 px-4">
+            <i [class]="item.icon"></i>
+            <span>{{ item.label }}</span>
+          </div>
+        </ng-template>
+      </p-selectbutton>
+    </div>
   </div>
 
   <div class="space-y-4">
     <h2 class="text-sm font-semibold text-primary-900 dark:text-primary-50">Additional Details</h2>
 
+    @if (itemForm.get('type')?.value === 'transit') {
+    <div class="grid md:grid-cols-12 gap-4">
+      <div class="md:col-span-4">
+        <p-floatlabel variant="in">
+          <p-select [options]="transitModes" optionValue="value" optionLabel="label" inputId="transit_mode"
+            formControlName="transit_mode" appendTo="body" fluid>
+            <ng-template let-mode #item>
+              <div class="flex items-center gap-2">
+                <i [class]="mode.icon"></i>
+                <span>{{ mode.label }}</span>
+              </div>
+            </ng-template>
+            <ng-template let-selected #selectedItem>
+              @if (selected) {
+              <div class="flex items-center gap-2">
+                <i [class]="selected.icon"></i>
+                <span>{{ selected.label }}</span>
+              </div>
+              }
+            </ng-template>
+          </p-select>
+          <label for="transit_mode">Transit Mode</label>
+        </p-floatlabel>
+      </div>
+
+      <div class="md:col-span-3">
+        <p-floatlabel variant="in">
+          <p-inputmask id="arrival_time" formControlName="arrival_time" mask="99?:99" fluid />
+          <label for="arrival_time">Arrival Time</label>
+        </p-floatlabel>
+      </div>
+
+      <div class="md:col-span-5">
+        <p-floatlabel variant="in">
+          <input id="arrival_location" formControlName="arrival_location" pInputText fluid />
+          <label for="arrival_location">Arrival Location</label>
+        </p-floatlabel>
+      </div>
+    </div>
+    }
+
     <div class="grid md:grid-cols-5 gap-4">
+      @if (itemForm.get('type')?.value === 'place') {
       <p-floatlabel variant="in" class="md:col-span-3">
         <p-select [options]="places" appendTo="body" optionValue="id" optionLabel="name" inputId="place" [filter]="true"
           filterBy="name" formControlName="place" [showClear]="true" fluid>
@@ -104,6 +157,7 @@
         <input id="lng" formControlName="lng" pInputText fluid />
         <label for="lng">Longitude</label>
       </p-floatlabel>
+      }
 
       <p-inputgroup class="h-full">
         <p-floatlabel variant="in">

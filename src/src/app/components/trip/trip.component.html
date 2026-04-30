@@ -331,6 +331,25 @@
                   </div>
 
                   <div class="flex-1 min-w-0">
+                    @if (item.type === 'transit') {
+                    <div class="flex items-center gap-3 min-w-0">
+                      <div class="flex flex-col items-center justify-center p-2 bg-primary-50 dark:bg-primary-800 rounded-lg">
+                        <i [class]="getTransitIcon(item.transit_mode)" class="text-lg text-primary-500"></i>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2 text-sm font-medium text-primary-900 dark:text-white">
+                          <span class="truncate">{{ item.text }}</span>
+                          <i class="pi pi-arrow-right text-[10px] opacity-50"></i>
+                          <span class="truncate">{{ item.arrival_location }}</span>
+                        </div>
+                        @if (item.arrival_time) {
+                        <p class="text-[10px] text-primary-500 font-mono">
+                          Arrives at {{ item.arrival_time }}
+                        </p>
+                        }
+                      </div>
+                    </div>
+                    } @else {
                     <div class="flex items-center gap-2 min-w-0">
                       @if (item.place && visibleProps.has('place')) {
                       @if (isTextAndPlaceToggled()) {
@@ -374,6 +393,7 @@
                     <p class="mt-1 text-xs text-primary-500 dark:text-primary-400 line-clamp-1 whitespace-pre-wrap">{{
                       item.comment }}
                     </p>
+                    }
                     }
                   </div>
 

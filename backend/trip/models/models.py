@@ -601,6 +601,8 @@ class Trip(TripBase, table=True):
 class TripCreate(TripBase):
     image: str | None = None
     place_ids: list[int] = []
+    image_id: int | None = None
+    daterange: list[str] | None = None
 
     class Config:
         extra = "forbid"
@@ -611,6 +613,8 @@ class TripUpdate(TripBase):
     name: str | None = None
     image: str | None = None
     place_ids: list[int] = []
+    image_id: int | None = None
+    daterange: list[str] | None = None
 
     class Config:
         extra = "forbid"
@@ -758,6 +762,13 @@ class TripItemBase(SQLModel):
     lng: float | None = None
     status: TripItemStatusEnum | None = None
     gpx: str | None = None
+    type: str = Field(default="place")
+    transit_mode: str | None = None
+    arrival_time: Annotated[
+        str | None,
+        StringConstraints(min_length=2, max_length=5, pattern=r"^([01]\d|2[0-3])(:[0-5]\d)?$"),
+    ] = None
+    arrival_location: str | None = None
 
     @field_validator("time", mode="before")
     def pad_mm_if_needed(cls, value: str) -> str:
@@ -788,6 +799,11 @@ class TripItem(TripItemBase, table=True):
 class TripItemCreate(TripItemBase):
     place: int | None = None
     status: TripItemStatusEnum | None = None
+    type: str | None = None
+    transit_mode: str | None = None
+    arrival_time: str | None = None
+    arrival_location: str | None = None
+
     image: str | None = None
     paid_by: str | None = None
     attachment_ids: list[int] = []
@@ -803,6 +819,10 @@ class TripItemUpdate(TripItemBase):
     place: int | None = None
     day_id: int | None = None
     status: TripItemStatusEnum | None = None
+    type: str | None = None
+    transit_mode: str | None = None
+    arrival_time: str | None = None
+    arrival_location: str | None = None
     image: str | None = None
     paid_by: str | None = None
     attachment_ids: list[int] = []
@@ -838,6 +858,10 @@ class TripItemRead(TripItemBase):
             image=_prefix_assets_url(obj.image.filename) if obj.image else None,
             image_id=obj.image_id,
             gpx=obj.gpx,
+            type=obj.type,
+            transit_mode=obj.transit_mode,
+            arrival_time=obj.arrival_time,
+            arrival_location=obj.arrival_location,
             paid_by=obj.paid_by,
             attachments=[TripAttachmentRead.serialize(att) for att in obj.attachments],
         )
