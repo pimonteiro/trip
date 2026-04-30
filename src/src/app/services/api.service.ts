@@ -104,11 +104,17 @@ export class ApiService {
   }
 
   postPlace(place: Place): Observable<Place> {
-    return this.httpClient.post<Place>(`${this.apiBaseUrl}/places`, place);
+    const { id, category, user, image_id, ...data } = place as any;
+    if (data.price === '') data.price = null;
+    if (data.duration === '') data.duration = null;
+    return this.httpClient.post<Place>(`${this.apiBaseUrl}/places`, data);
   }
 
   putPlace(placeId: number, place: Partial<Place>): Observable<Place> {
-    return this.httpClient.put<Place>(`${this.apiBaseUrl}/places/${placeId}`, place);
+    const { id, category, user, image_id, ...data } = place as any;
+    if (data.price === '') data.price = null;
+    if (data.duration === '') data.duration = null;
+    return this.httpClient.put<Place>(`${this.apiBaseUrl}/places/${placeId}`, data);
   }
 
   deletePlace(placeId: number): Observable<null> {
@@ -134,7 +140,9 @@ export class ApiService {
   }
 
   postTrip(trip: TripBase): Observable<TripBase> {
-    return this.httpClient.post<TripBase>(`${this.apiBaseUrl}/trips`, trip);
+    const { id, user, days, collaborators, ...data } = trip as any;
+    if (data.budget === '') data.budget = null;
+    return this.httpClient.post<TripBase>(`${this.apiBaseUrl}/trips`, data);
   }
 
   deleteTrip(tripId: number): Observable<null> {
@@ -142,15 +150,19 @@ export class ApiService {
   }
 
   putTrip(trip: Partial<Trip>, tripId: number): Observable<Trip> {
-    return this.httpClient.put<Trip>(`${this.apiBaseUrl}/trips/${tripId}`, trip);
+    const { id, user, days, collaborators, attachments, places, shared, image_id, ...data } = trip as any;
+    if (data.budget === '') data.budget = null;
+    return this.httpClient.put<Trip>(`${this.apiBaseUrl}/trips/${tripId}`, data);
   }
 
   postTripDay(tripDay: TripDay, tripId: number): Observable<TripDay> {
-    return this.httpClient.post<TripDay>(`${this.apiBaseUrl}/trips/${tripId}/days`, tripDay);
+    const { id, items, ...data } = tripDay as any;
+    return this.httpClient.post<TripDay>(`${this.apiBaseUrl}/trips/${tripId}/days`, data);
   }
 
   putTripDay(tripDay: Partial<TripDay>, tripId: number): Observable<TripDay> {
-    return this.httpClient.put<TripDay>(`${this.apiBaseUrl}/trips/${tripId}/days/${tripDay.id}`, tripDay);
+    const { id, items, ...data } = tripDay as any;
+    return this.httpClient.put<TripDay>(`${this.apiBaseUrl}/trips/${tripId}/days/${tripDay.id}`, data);
   }
 
   deleteTripDay(tripId: number, day_id: number): Observable<null> {
@@ -158,11 +170,17 @@ export class ApiService {
   }
 
   postTripDayItem(item: TripItem, tripId: number, day_id: number): Observable<TripItem> {
-    return this.httpClient.post<TripItem>(`${this.apiBaseUrl}/trips/${tripId}/days/${day_id}/items`, item);
+    const { id, place, day_id: _, image_id, status, attachments, distance, ...data } = item as any;
+    if (data.price === '') data.price = null;
+    const payload = { ...data, place: place?.id, status: typeof status === 'string' ? status : status?.label };
+    return this.httpClient.post<TripItem>(`${this.apiBaseUrl}/trips/${tripId}/days/${day_id}/items`, payload);
   }
 
   putTripDayItem(item: Partial<TripItem>, tripId: number, day_id: number, item_id: number): Observable<TripItem> {
-    return this.httpClient.put<TripItem>(`${this.apiBaseUrl}/trips/${tripId}/days/${day_id}/items/${item_id}`, item);
+    const { id, place, day_id: _, image_id, status, attachments, distance, ...data } = item as any;
+    if (data.price === '') data.price = null;
+    const payload = { ...data, place: place?.id, status: typeof status === 'string' ? status : status?.label };
+    return this.httpClient.put<TripItem>(`${this.apiBaseUrl}/trips/${tripId}/days/${day_id}/items/${item_id}`, payload);
   }
 
   deleteTripDayItem(tripId: number, day_id: number, item_id: number): Observable<null> {

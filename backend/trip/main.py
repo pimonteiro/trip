@@ -13,6 +13,11 @@ from .db.core import init_and_migrate_db
 from .routers import (admin, auth, categories, places, providers, settings,
                       token, trips)
 from .utils.utils import silence_http_logging
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+import logging
+
+logger = logging.getLogger(__name__)
 
 if not Path(get_settings().FRONTEND_FOLDER).is_dir():
     raise ValueError()
@@ -29,6 +34,15 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    print("422 Error Payload:", await request.body())
+    print("422 Error Detail:", exc.errors())
+    return JSONResponse(
+        status_code=422,
+        content={"detail": exc.errors(), "body": exc.body},
+    )
 
 app.add_middleware(
     CORSMiddleware,

@@ -139,4 +139,10 @@ export class PlaceBoxContentComponent {
     this.tooltipCopied.set(true);
     setTimeout(() => this.tooltipCopied.set(false), 1200);
   }
+
+  get googleMapsUrl() {
+    if (!this.selectedPlace) return '';
+    const query = encodeURIComponent(`${this.selectedPlace.name} ${this.selectedPlace.place}`);
+    return `https://www.google.com/maps/search/?api=1&query=${query}`;
+  }
 }

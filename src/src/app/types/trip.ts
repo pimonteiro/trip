@@ -148,6 +148,16 @@ export interface DayViewModel {
     cost: number;
     hasPlaces: boolean;
   };
+  weather?: DailyWeather;
+}
+
+export interface DailyWeather {
+  date: string;
+  tempMax: number;
+  tempMin: number;
+  weatherCode: number;
+  emoji: string;
+  description: string;
 }
 
 export interface HighlightData {

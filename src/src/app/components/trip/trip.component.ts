@@ -34,8 +34,10 @@ import {
   ViewTripItem,
   DayViewModel,
   HighlightData,
+  DailyWeather,
 } from '../../types/trip';
 import { Category, Place } from '../../types/poi';
+import { WeatherService } from '../../services/weather.service';
 import {
   createMap,
   placeToMarker,
@@ -153,11 +155,13 @@ export class TripComponent implements AfterViewInit, OnDestroy {
   clipboard: Clipboard;
   routeManager: RouteManagerService;
   changeDetectionRef: ChangeDetectorRef;
+  weatherService: WeatherService;
 
   trip = signal<Trip | null>(null);
   tripMembers = signal<TripMember[]>([]);
   packingList = signal<PackingItem[]>([]);
   checklistItems = signal<ChecklistItem[]>([]);
+  dailyWeather = signal<DailyWeather[]>([]);
 
   searchQuery = signal<string>('');
   isPlansPanelCollapsed = signal<boolean>(false);
@@ -253,12 +257,18 @@ export class TripComponent implements AfterViewInit, OnDestroy {
     return { ...item, day: dayLabel };
   });
   hasSelection = computed(() => this.selectedPlace() !== null || this.selectedItem() !== null);
+  
+  getDayWeather(day: TripDay): DailyWeather | undefined {
+    return this.dailyWeather()?.find((w) => w.date === day.dt);
+  }
+
   tripViewModel = computed(() => {
     const currentTrip = this.trip();
     if (!currentTrip?.days) return [];
 
     const query = this.searchQuery().toLowerCase().trim();
     const hasQuery = query.length > 0;
+    const weather = this.dailyWeather();
     const statusesMap = new Map(this.utilsService.statuses.map((s) => [s.label, s]));
 
     return currentTrip.days
@@ -303,6 +313,8 @@ export class TripComponent implements AfterViewInit, OnDestroy {
 
           return { ...item, status: statusObj, distance };
         });
+        
+        const dayWeather = weather.find((w) => w.date === day.dt);
 
         return {
           day,
@@ -312,6 +324,7 @@ export class TripComponent implements AfterViewInit, OnDestroy {
             cost: totalCost,
             hasPlaces,
           },
+          weather: dayWeather,
         };
       })
       .filter((vm) => vm !== null);
@@ -460,6 +473,7 @@ export class TripComponent implements AfterViewInit, OnDestroy {
     this.clipboard = inject(Clipboard);
     this.routeManager = inject(RouteManagerService);
     this.changeDetectionRef = inject(ChangeDetectorRef);
+    this.weatherService = inject(WeatherService);
 
     this.statuses = this.utilsService.statuses;
     this.username = this.utilsService.loggedUser;
@@ -645,6 +659,14 @@ export class TripComponent implements AfterViewInit, OnDestroy {
           this.trip.set(trip);
           this.tripMembers.set(members);
           if (!this.map) this.initMap(settings);
+          
+          if (trip.places && trip.places.length > 0) {
+            const firstPlace = trip.places[0];
+            this.weatherService.getForecast(firstPlace.lat, firstPlace.lng).subscribe({
+              next: (forecast) => this.dailyWeather.set(forecast),
+              error: () => console.warn('Could not load weather forecast')
+            });
+          }
         },
         error: () => {
           this.utilsService.toast('error', 'Error', 'Could not load trip');

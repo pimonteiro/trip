@@ -287,6 +287,12 @@
               </div>
 
               <div class="shrink-0 flex items-center gap-2">
+                @if (group.weather) {
+                <span class="flex items-center gap-1.5 px-2 py-1 text-xs font-medium text-primary-600 dark:text-primary-400 bg-primary-100 dark:bg-primary-800/50 rounded-md" [title]="group.weather.description">
+                  <span class="text-sm leading-none">{{ group.weather.emoji }}</span>
+                  <span>{{ group.weather.tempMax }}&deg; / {{ group.weather.tempMin }}&deg;</span>
+                </span>
+                }
                 @if (visibleProps.has('price')) {
                 <span
                   class="flex items-center bg-primary-100 dark:bg-primary-800 text-primary-900 dark:text-white px-2 py-1 text-xs font-medium rounded-md">{{
@@ -491,6 +497,12 @@
             </div>
 
             <div class="flex shrink-0 items-center gap-2">
+              @if (group.weather) {
+              <span class="hidden sm:flex items-center gap-1.5 px-2 py-1 text-xs font-medium text-primary-600 dark:text-primary-400 bg-primary-100 dark:bg-primary-800/50 rounded-md" [title]="group.weather.description">
+                <span class="text-sm leading-none">{{ group.weather.emoji }}</span>
+                <span>{{ group.weather.tempMax }}&deg; / {{ group.weather.tempMin }}&deg;</span>
+              </span>
+              }
               <span
                 class="flex items-center bg-primary-100 dark:bg-primary-800 text-primary-900 dark:text-white px-2 py-1 text-xs font-medium rounded-md">{{
                 group.stats.cost | number: '1.0-0' }} {{ trip()?.currency }}
@@ -1008,6 +1020,12 @@
             <div class="text-primary-600 flex items-center gap-1 mt-1">
               <i class="pi pi-calendar text-xs"></i>
               <span class="text-sm font-medium truncate">{{ day.dt | date: 'd MMM, y' }}</span>
+              @if (getDayWeather(day); as w) {
+              <span class="flex items-center gap-1.5 ml-3 px-2 py-0.5 text-xs font-medium text-primary-600 dark:text-primary-400 bg-primary-100 dark:bg-primary-800/50 rounded-md" [title]="w.description">
+                <span class="text-sm leading-none">{{ w.emoji }}</span>
+                <span>{{ w.tempMax }}&deg; / {{ w.tempMin }}&deg;</span>
+              </span>
+              }
             </div>
           </div>
 

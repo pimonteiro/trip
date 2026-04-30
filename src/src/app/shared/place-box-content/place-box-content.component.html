@@ -96,11 +96,18 @@
         Coordinates
       </span>
 
-      <button [cdkCopyToClipboard]="coords" (cdkCopyToClipboardCopied)="onCoordsCopied()"
-        class="inline-flex items-center h-8 gap-1.5 px-3 py-1.5 text-xs font-medium text-primary-600 dark:text-primary-300 cursor-pointer rounded border bg-primary-50 dark:bg-primary-800 hover:bg-primary-100 dark:hover:bg-primary-700 border-primary-200 dark:border-primary-700 transition-colors min-w-0 max-w-full">
-        <i class="pi shrink-0" [class]="tooltipCopied() ? 'pi-check text-green-600' : 'pi-copy'"></i>
-        <span class="truncate">{{ coords }}</span>
-      </button>
+      <div class="flex gap-2">
+        <button [cdkCopyToClipboard]="coords" (cdkCopyToClipboardCopied)="onCoordsCopied()"
+          class="inline-flex items-center h-8 gap-1.5 px-3 py-1.5 text-xs font-medium text-primary-600 dark:text-primary-300 cursor-pointer rounded border bg-primary-50 dark:bg-primary-800 hover:bg-primary-100 dark:hover:bg-primary-700 border-primary-200 dark:border-primary-700 transition-colors min-w-0 max-w-full">
+          <i class="pi shrink-0" [class]="tooltipCopied() ? 'pi-check text-green-600' : 'pi-copy'"></i>
+          <span class="truncate">{{ coords }}</span>
+        </button>
+
+        <a [href]="googleMapsUrl" target="_blank" pTooltip="Open in Google Maps"
+          class="inline-flex items-center justify-center h-8 w-8 text-primary-600 dark:text-primary-300 rounded border bg-primary-50 dark:bg-primary-800 hover:bg-primary-100 dark:hover:bg-primary-700 border-primary-200 dark:border-primary-700 transition-colors shrink-0">
+          <i class="pi pi-map-marker text-xs"></i>
+        </a>
+      </div>
     </div>
 
     <div class="min-w-0">
