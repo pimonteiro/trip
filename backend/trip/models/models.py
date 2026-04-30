@@ -183,6 +183,10 @@ class ConfigUpdate(BaseModel):
     DEFAULT_MAP_LAT: float | None = None
     DEFAULT_MAP_LNG: float | None = None
 
+    class Config:
+        extra = "forbid"
+
+
 
 class TempPasswordRead(BaseModel):
     temporary: str
@@ -354,6 +358,10 @@ class UserUpdate(UserBase):
     google_apikey: str | None = None
     map_provider: MapProvider | None = None
 
+    class Config:
+        extra = "forbid"
+
+
 
 class UserRead(UserBase):
     username: str
@@ -428,11 +436,19 @@ class CategoryCreate(CategoryBase):
     image: str | None = None
     color: str | None = None
 
+    class Config:
+        extra = "forbid"
+
+
 
 class CategoryUpdate(CategoryBase):
     name: str | None = None
     image: str | None = None
     color: str | None = None
+
+    class Config:
+        extra = "forbid"
+
 
 
 class CategoryRead(CategoryBase):
@@ -494,10 +510,18 @@ class PlaceCreate(PlaceBase):
     image: str | None = None
     category_id: int
 
+    class Config:
+        extra = "forbid"
+
+
 
 class TokenPlaceCreate(PlaceBase):
     image: str | None = None
     category: str
+
+    class Config:
+        extra = "forbid"
+
 
 
 class PlaceUpdate(PlaceBase):
@@ -507,6 +531,10 @@ class PlaceUpdate(PlaceBase):
     place: str | None = None
     category_id: int | None = None
     image: str | None = None
+
+    class Config:
+        extra = "forbid"
+
 
 
 class PlaceRead(PlaceBase):
@@ -574,11 +602,19 @@ class TripCreate(TripBase):
     image: str | None = None
     place_ids: list[int] = []
 
+    class Config:
+        extra = "forbid"
+
+
 
 class TripUpdate(TripBase):
     name: str | None = None
     image: str | None = None
     place_ids: list[int] = []
+
+    class Config:
+        extra = "forbid"
+
 
 
 class TripReadBase(TripBase):
@@ -649,6 +685,10 @@ class TripMember(SQLModel, table=True):
 
 class TripMemberCreate(BaseModel):
     user: str
+
+    class Config:
+        extra = "forbid"
+
 
 
 class TripMemberRead(BaseModel):
@@ -752,6 +792,10 @@ class TripItemCreate(TripItemBase):
     paid_by: str | None = None
     attachment_ids: list[int] = []
 
+    class Config:
+        extra = "forbid"
+
+
 
 class TripItemUpdate(TripItemBase):
     time: str | None = None
@@ -762,6 +806,10 @@ class TripItemUpdate(TripItemBase):
     image: str | None = None
     paid_by: str | None = None
     attachment_ids: list[int] = []
+
+    class Config:
+        extra = "forbid"
+
 
 
 class TripItemRead(TripItemBase):
@@ -802,6 +850,10 @@ class TripShareDetails(BaseModel):
 
 class TripShareCreate(BaseModel):
     is_full_access: bool | None
+
+    class Config:
+        extra = "forbid"
+
 
 
 class TripShare(SQLModel, table=True):
@@ -935,8 +987,15 @@ class TripChecklistItem(TripChecklistItemBase, table=True):
 class TripChecklistItemCreate(TripChecklistItemBase):
     checked: bool = False
 
+    class Config:
+        extra = "forbid"
 
-class TripChecklistItemUpdate(TripChecklistItemBase): ...
+
+
+class TripChecklistItemUpdate(TripChecklistItemBase): 
+    class Config:
+        extra = "forbid"
+
 
 
 class TripChecklistItemRead(TripChecklistItemBase):
@@ -978,7 +1037,10 @@ def mark_attachment_for_deletion(mapper, connection, target: TripAttachment):
     session._attachments_to_delete.append(target)
 
 
-class TripAttachmentCreate(TripAttachmentBase): ...
+class TripAttachmentCreate(TripAttachmentBase): 
+    class Config:
+        extra = "forbid"
+
 
 
 class TripAttachmentRead(TripAttachmentBase):

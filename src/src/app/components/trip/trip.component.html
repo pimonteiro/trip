@@ -181,6 +181,12 @@
                 <p-button icon="pi pi-wave-pulse" (click)="toggleTripDaysHighlight()" text size="small"
                   pTooltip="Highlight Trip" />
                 <p-button icon="pi pi-filter" (click)="toggleFiltering()" text size="small" pTooltip="Filter" />
+                <p-button icon="pi pi-align-left" (click)="openTripNotesModal()" text size="small" pTooltip="Notes">
+                  @if (trip()?.notes) {
+                  <p-badge value="!" severity="success"
+                    styleClass="absolute -top-1 -right-1 text-[10px] min-w-[14px] h-[14px] leading-[14px]"></p-badge>
+                  }
+                </p-button>
                 <p-button icon="pi pi-download" (click)="menuTripExport.toggle($event)" text size="small"
                   pTooltip="Export" />
                 <p-menu #menuTripExport [model]="menuTripExportItems" appendTo="body" [popup]="true" />
@@ -242,6 +248,16 @@
                 </div>
                 }
               </div>
+            </div>
+            }
+
+            @if (trip()?.notes) {
+            <div class="mt-4 p-3 rounded-lg border border-primary-200 dark:border-primary-700 bg-primary-50 dark:bg-primary-900/50">
+              <div class="flex justify-between items-start mb-1">
+                <p class="text-[11px] font-semibold text-primary-500 uppercase tracking-wide mt-1">Trip Notes</p>
+                <p-button icon="pi pi-pencil" text size="small" (click)="openTripNotesModal()" [style]="{width: '1.5rem', height: '1.5rem', padding: '0'}" />
+              </div>
+              <div class="text-sm text-primary-800 dark:text-primary-200 whitespace-pre-wrap leading-relaxed" [innerHTML]="(trip()?.notes || '') | linkify"></div>
             </div>
             }
           </div>

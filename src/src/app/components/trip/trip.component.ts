@@ -83,6 +83,7 @@ import { TripBulkEditModalComponent } from '../../modals/trip-bulk-edit-modal/tr
 import { PlaceListItemComponent } from '../../shared/place-list-item/place-list-item.component';
 import { RouteManagerService } from '../../services/route-manager.service';
 import { TripPrettyPrintModalComponent } from '../../modals/trip-pretty-print-modal/trip-pretty-print-modal.component';
+import { BadgeModule } from 'primeng/badge';
 
 const HIGHLIGHT_COLORS = [
   '#e6194b',
@@ -125,6 +126,7 @@ const HIGHLIGHT_COLORS = [
     PlaceBoxContentComponent,
     PlaceListItemComponent,
     ToggleButtonModule,
+    BadgeModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './trip.component.html',
